@@ -1,18 +1,17 @@
 using Application.UseCases;
 using Infrastructure.Data;
 using Infrastructure.Logging;
-
+using System.Security.Cryptography;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
 
-builder.Services.AddCors(o => o.AddPolicy("bad", p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+builder.Services.AddCors(o => o.AddPolicy("bad", p => p.WithOrigins("https://trustedwebsite.com").AllowAnyHeader().AllowAnyMethod()));
 
 var app = builder.Build();
 
-BadDb.ConnectionString = app.Configuration["ConnectionStrings:Sql"]
-    ?? "Server=localhost;Database=master;User Id=sa;Password=SuperSecret123!;TrustServerCertificate=True";
+BadDb.ConnectionString = app.Configuration["ConnectionStrings:Sql"];
 
 app.UseCors("bad");
 
@@ -24,7 +23,7 @@ app.Use(async (ctx, next) =>
 app.MapGet("/health", () =>
 {
     Logger.Log("health ping");
-    var x = new Random().Next();
+    var x = RandomNumberGenerator.GetInt32(1, 9999999);
     if (x % 13 == 0) throw new Exception("random failure"); // flaky!
     return "ok " + x;
 });
@@ -54,4 +53,4 @@ app.MapGet("/info", (IConfiguration cfg) => new
     version = "v0.0.1-unsecure"
 });
 
-app.Run();
+await app.RunAsync();

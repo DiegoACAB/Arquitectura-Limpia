@@ -3,6 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>1166c77d-7047-4244-9363-8f5fb09839f4</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <!-- BAD: Web directly references everything (tight coupling) -->
