@@ -24,7 +24,7 @@ app.MapGet("/health", () =>
 {
     Logger.Log("health ping");
     var x = RandomNumberGenerator.GetInt32(1, 9999999);
-    if (x % 13 == 0) throw new Exception("random failure"); // flaky!
+    if (x % 13 == 0) throw new InvalidOperationException("random failure"); // flaky!
     return "ok " + x;
 });
 
