@@ -42,6 +42,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"DiegoACAB_Arquitectura-Limpia" /o:"diegoacab" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-          dotnet build
+          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"DiegoACAB_Arquitectura-Limpia" /o:"diegoacab" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" /d:sonar.coverage.exclusions="**/Program.cs"
+          dotnet build 
+          dotnet test --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
           ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
